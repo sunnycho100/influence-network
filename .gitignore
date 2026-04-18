@@ -1,0 +1,46 @@
+# Dependencies
+node_modules
+
+# Build
+dist
+*.tsbuildinfo
+
+# Caches
+.vite
+.turbo
+.cache
+.pnpm-store
+
+# Env — keep tracked examples only
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Test / coverage
+coverage
+
+# Logs
+*.log
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE (local)
+.idea
+.vscode
+*.suo
+*.sw?
+
+# Patch / merge leftovers
+*.orig
+*.rej
+
+# Chrome extension packaging artifacts
+*.crx
+*.pem

@@ -1,0 +1,21 @@
+{
+  "name": "alumni-graph",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "workspaces": [
+    "shared",
+    "extension",
+    "webapp"
+  ],
+  "scripts": {
+    "build": "pnpm --filter @alumni-graph/shared build && pnpm --filter @alumni-graph/extension build && pnpm --filter @alumni-graph/webapp build",
+    "clean": "pnpm --filter @alumni-graph/shared clean && rm -rf extension/dist webapp/dist",
+    "dev:extension": "pnpm --filter @alumni-graph/extension dev",
+    "dev:webapp": "pnpm --filter @alumni-graph/webapp dev",
+    "typecheck": "pnpm --filter @alumni-graph/shared typecheck && pnpm --filter @alumni-graph/extension typecheck && pnpm --filter @alumni-graph/webapp typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.0",
+    "typescript": "6.0.3"
+  }
+}
