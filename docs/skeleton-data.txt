@@ -1,0 +1,258 @@
+=== TOP CARD ===
+section.artdeco-card.aIlvsmxVMXyvPtOTFMyUxrLfxhfmPuyNs
+  div.top-card-background-hero-image
+    div.top-card-background-hero-image__bg-image
+      div.profile-background-image[role=button][aria-label="Background Image"]
+        div.profile-background-image__image-container
+          img#profile-background-image-target-image.profile-background-image__image.relative.full-width.full-height
+  div.ph5.pb5
+    div.display-flex
+      div.QbqQormsUbGgeIpscivrHhGqUYOsOWRFPoFRI.text-align-left.pv-top-card--photo-resize
+        div.pv-top-card__non-self-photo-wrapper.ml0
+          button.LWrpEFEgzDOAbosxycWlDoCAqHxxkbCYBDmlGZY.pv-top-card-profile-picture__container.display-block.pv-top-card__photo.presence-entity__image.EntityPhoto-circle-9[aria-label="open profile picture"]
+            img#ember36.OhBUsWWykezVRhrloJEHvdUudnycb.pv-top-card-profile-picture__image--show.evi-image.ember-view
+      div.flex-1.flex-column
+        div.tCjDQUuOPweOjZvrvwahWHtKAYglSSywOU
+          span.pv-member-badge.pv-member-badge--for-top-card
+            button.align-self-center.p1
+              svg[role=none]
+                svg
+                  image
+                svg
+                  image
+            span.visually-hidden | Kody has a {:badgeType} account
+          div#ember37.ember-view
+          div.nt-edgesetting
+            span#ember141.artdeco-hoverable-trigger.artdeco-hoverable-trigger--content-placed-bottom.artdeco-hoverable-trigger--is-hoverable.ember-view
+              button#ember142.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--3.artdeco-button--tertiary.ember-view.profile-top-card__subscribe-button[aria-label="Notify me about all of Kody’s posts"]
+                svg.artdeco-button__icon[role=none]
+                  use
+                span.artdeco-button__text | test
+    div.mt2.relative
+      div.YFOiOwnVbRqpEuzTHrVwlspMRWdKHBfyjtYmY
+        div.UypxmvMViCnDIlkdOcjDREVjFQeCrkMMxdJJBg
+          span#ember38.artdeco-hoverable-trigger.artdeco-hoverable-trigger--content-placed-bottom.artdeco-hoverable-trigger--is-hoverable.ember-view
+            a#ember39.ember-view.TMXINYPOBLAolBcclkzvKVXsObIYHGucFgc[aria-label="Kody Fisher"]
+              h1.KJGekvrndhMvrUEcLdXLrgbXMXPeTDoBcbILrLA.inline.t-24.v-align-middle.break-words | Kody Fisher
+              svg.pv-text-details__verified-badge-icon.v-align-middle[role=none]
+                use
+            div#artdeco-gen-42.ember-view
+              div#ember41.ember-view
+          span.distance-badge.t-black--light.t-14.t-black--light.GPNEkpkEMursqueWORquEjmzryZVPPgGAQrBMDc.text-body-small.v-align-middle
+            span.visually-hidden | 1st degree connection
+            span.dist-value | 1st
+        div.text-body-medium.break-words | Building Cursor
+      ul.LCqnPrnFLmxPwOkHFqfwCQYiUCrhrOleotcCAeo
+        li.QwJMsgKSCJRWJkXnQwVCuHCKJQIJMeAW
+          button.rJrwFXDbpYqTNZOzUslQhmmgboDUrDQfsxg.text-align-left[aria-label="Current company: Cursor. Click to skip to experience card"]
+            img#ember143.evi-image.ember-view.soYxBKWKZIZIsoAnlhhHwTslriPyjFHffdk.EntityPhoto-square-1
+            span.zkRmJPMpNfzKGdmZwbpYWThzbAbXldgSYXE.hoverable-link-text.break-words.text-body-small.t-black
+              div.dkAXoJjfbuXMHWrFkgDwqpbccsPwlLeNIA.inline-show-more-text--is-collapsed.inline-show-more-text--is-collapsed-with-line-clamp | Cursor
+        li.QwJMsgKSCJRWJkXnQwVCuHCKJQIJMeAW
+          button.rJrwFXDbpYqTNZOzUslQhmmgboDUrDQfsxg.text-align-left[aria-label="Education: University of Wisconsin-Madison. Click to skip to"]
+            img#ember144.evi-image.ember-view.soYxBKWKZIZIsoAnlhhHwTslriPyjFHffdk.EntityPhoto-square-1
+            span.zkRmJPMpNfzKGdmZwbpYWThzbAbXldgSYXE.hoverable-link-text.break-words.text-body-small.t-black
+              div.dkAXoJjfbuXMHWrFkgDwqpbccsPwlLeNIA.inline-show-more-text--is-collapsed.inline-show-more-text--is-collapsed-with-line-clamp | University of Wisconsin-Madison
+      div.YFOiOwnVbRqpEuzTHrVwlspMRWdKHBfyjtYmY.mt2
+        span.text-body-small.inline.t-black--light.break-words | Madison, Wisconsin, United States
+        span.GPNEkpkEMursqueWORquEjmzryZVPPgGAQrBMDc.t-black--light
+          a#top-card-text-details-contact-info.ember-view.link-without-visited-state.cursor-pointer.text-heading-small.inline-block.break-words | Contact info
+    ul.QqmLiFlrwXTARLhtwUykVIzsSHldIDYc.tvprgWlRggOJbTnKxvCkbUmlxWWZEMRGuOhtM
+      li.text-body-small
+        a#ember145.ember-view
+          span.link-without-visited-state | connections
+            span.t-bold | 500+
+    a.WKVSfLCavKyjywFEXwZDFLAfdDosdiAqrY.inline-flex.align-items-center.link-without-hover-visited.pt2
+      div.ivm-image-view-model.mr2
+        ul.ivm-image-view-model__img-list--stacked.list-style-none.display-flex.justify-center
+          li.ivm-image-view-model__img-list-item--stacked
+            div.ivm-view-attr__img-wrapper
+              img#ember146.ivm-view-attr__img--centered.ivm-view-attr__img--stacked.ivm-view-attr__img--stacked-circle-size-1.EntityPhoto-circle-1-stackedFacepile.evi-image.lazy-image.ember-view
+          li.ivm-image-view-model__img-list-item--stacked
+            div.ivm-view-attr__img-wrapper
+              img#ember147.ivm-view-attr__img--centered.ivm-view-attr__img--stacked.ivm-view-attr__img--stacked-circle-size-1.EntityPhoto-circle-1-stackedFacepile.evi-image.lazy-image.ember-view
+      span.t-normal.t-black--light.t-14.hoverable-link-text
+        span | , | , and 1 other mutual connection
+          strong | Manas Joshi
+          span.white-space-pre
+          strong | Junghyun Yun
+        span.visually-hidden | , | , and 1 other mutual connection
+          strong | Manas Joshi
+          span.white-space-pre
+          strong | Junghyun Yun
+    div.qFPoOSWOHIylIcNalgzpgSDbzfqJOKAARIGFE
+      div.WCgSuGsiOtSBuTVNpDWUPlFtkhIGdHzJCOpjk
+        div.entry-point.jIHiyHZiNBLholprsNGGHnRxDRwcGdysWGzfPtI
+          div
+          button#ember148.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view.woUVvtqbfccvINnCFEdNKWXccYBtNofZjdk[aria-label="Message Kody"]
+            svg.artdeco-button__icon[role=none]
+              use
+            span.artdeco-button__text | Message
+        div#ember150.artdeco-dropdown.artdeco-dropdown--placement-bottom.artdeco-dropdown--justification-right.ember-view
+          button#ember149-profile-overflow-action.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view.woUVvtqbfccvINnCFEdNKWXccYBtNofZjdk.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--1.ar[aria-label="More actions"]
+            svg[role=none]
+              use
+          div#ember152.CheNXCVnhJpwsfbtpJwdfWLJnukFOcNFnScBW.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-right.artdeco-dropdown__content--placement-bottom.ember-v
+            div.artdeco-dropdown__content-inner
+              ul
+                li
+                  div#ember153.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Send Kody Fisher’s profile via message"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Send profile in a message
+                li
+                  div#ember154.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Save to PDF"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Save to PDF
+                li
+                  div#ember155.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Request Kody Fisher’s recommendation"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Request a recommendation
+                li
+                  div#ember156.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Write a recommendation for Kody Fisher"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Recommend
+                li
+                  div#ember157.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Unfollow Kody Fisher"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Unfollow
+                li
+                  div#ember158.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Remove your connection to Kody Fisher"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Remove Connection
+                li
+                  div#ember159.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view.full-width.display-flex.align-items-center[role=button][aria-label="Report or block Kody Fisher’s profile"]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | Report / Block
+                li
+                  div#ember160.display-flex.align-items-center.full-width.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view[role=button]
+                    svg.mr3.flex-grow-0[role=none]
+                      use
+                    span.display-flex.t-normal.flex-1 | About this profile
+                    span.a11y-text | About this profile
+  div#profile-sticky-header-toggle
+
+=== EXPERIENCE LI ===
+li.artdeco-list__item.yZuKMNpkTkaYbqRsdOxSvbOfHjMBtSZWMOU.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+  div.vqPXWkXXCDDZvQQClfhqhMHOeItMTpUsT.wlTAkaftbpywYKXCCowLIfDxGeAZmfvztEoMzA.snYuutfUplcUuWJcBDYqiYKGClKANkrXeFg[data-view-name=profile-component-entity]
+    div
+      a.optional-action-target-wrapper.pvs-entity__image-container--outline-offset.display-flex
+        div.ivm-image-view-model.pvs-entity__image
+          div.ivm-view-attr__img-wrapper
+            img#ember55.ivm-view-attr__img--centered.EntityPhoto-square-3.evi-image.lazy-image.ember-view
+    div.display-flex.flex-column.align-self-center.flex-grow-1
+      div.display-flex.flex-row.justify-space-between
+        a.optional-action-target-wrapper.display-flex.flex-column.full-width
+          div.display-flex.flex-wrap.align-items-center.full-height
+            div.display-flex
+              div.display-flex.full-width
+                div.display-flex.align-items-center.mr1.hoverable-link-text.t-bold
+                  span | Cursor
+                  span.visually-hidden | Cursor
+          span.t-14.t-normal
+            span | Full-time · 1 yr
+            span.visually-hidden | Full-time · 1 yr
+      div.CyNidYqNlqJRTwJLpYggzvmNLguypEjg.pvs-entity__sub-components
+        ul.AKAamnCGgVGEfOctQIzmwwgiADgHMeRA
+          li.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+            span.CRkaduVaUqHYaVSzvpbUGRauFpsAhHMKEQ
+            div.vqPXWkXXCDDZvQQClfhqhMHOeItMTpUsT.NmaKImkIWIcLTvphZrrRvLQcWbZaysgusWU[data-view-name=profile-component-entity]
+              div
+                div.display-flex
+              div.display-flex.flex-column.align-self-center.flex-grow-1
+                div.display-flex.flex-row.justify-space-between
+                  a.optional-action-target-wrapper.display-flex.flex-column.full-width
+                    div.display-flex.flex-wrap.align-items-center.full-height
+                      div.display-flex
+                        div.display-flex.full-width
+                          div.display-flex.align-items-center.mr1.hoverable-link-text.t-bold
+                            span | Technical Support Engineering Manager
+                            span.visually-hidden | Technical Support Engineering Manager
+                    span.t-14.t-normal.t-black--light
+                      span.pvs-entity__caption-wrapper | Aug 2025 - Present · 9 mos
+                      span.visually-hidden | Aug 2025 to Present · 9 mos
+                    span.t-14.t-normal.t-black--light
+                      span | Remote
+                      span.visually-hidden | Remote
+          li.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+            span.CRkaduVaUqHYaVSzvpbUGRauFpsAhHMKEQ
+            div.vqPXWkXXCDDZvQQClfhqhMHOeItMTpUsT[data-view-name=profile-component-entity]
+              div
+                div.display-flex
+              div.display-flex.flex-column.align-self-center.flex-grow-1
+                div.display-flex.flex-row.justify-space-between
+                  a.optional-action-target-wrapper.display-flex.flex-column.full-width
+                    div.display-flex.flex-wrap.align-items-center.full-height
+                      div.display-flex
+                        div.display-flex.full-width
+                          div.display-flex.align-items-center.mr1.hoverable-link-text.t-bold
+                            span | Technical Support Engineer
+                            span.visually-hidden | Technical Support Engineer
+                    span.t-14.t-normal.t-black--light
+                      span.pvs-entity__caption-wrapper | May 2025 - Aug 2025 · 4 mos
+                      span.visually-hidden | May 2025 to Aug 2025 · 4 mos
+
+=== EDUCATION LI ===
+li.artdeco-list__item.yZuKMNpkTkaYbqRsdOxSvbOfHjMBtSZWMOU.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+  div.vqPXWkXXCDDZvQQClfhqhMHOeItMTpUsT.wlTAkaftbpywYKXCCowLIfDxGeAZmfvztEoMzA.snYuutfUplcUuWJcBDYqiYKGClKANkrXeFg[data-view-name=profile-component-entity]
+    div
+      a.optional-action-target-wrapper.pvs-entity__image-container--outline-offset.display-flex
+        div.ivm-image-view-model.pvs-entity__image
+          div.ivm-view-attr__img-wrapper
+            img#ember105.ivm-view-attr__img--centered.EntityPhoto-square-3.evi-image.lazy-image.ember-view
+    div.display-flex.flex-column.align-self-center.flex-grow-1
+      div.display-flex.flex-row.justify-space-between
+        a.optional-action-target-wrapper.display-flex.flex-column.full-width
+          div.display-flex.flex-wrap.align-items-center.full-height
+            div.display-flex
+              div.display-flex.full-width
+                div.display-flex.align-items-center.mr1.hoverable-link-text.t-bold
+                  span | University of Wisconsin-Madison
+                  span.visually-hidden | University of Wisconsin-Madison
+          span.t-14.t-normal
+            span | Bachelor’s Degree, Economics and Finance
+            span.visually-hidden | Bachelor’s Degree, Economics and Finance
+          span.t-14.t-normal.t-black--light
+            span.pvs-entity__caption-wrapper | 2014 - 2018
+            span.visually-hidden | 2014 - 2018
+
+=== SKILLS LI ===
+li.artdeco-list__item.yZuKMNpkTkaYbqRsdOxSvbOfHjMBtSZWMOU.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+  div.vqPXWkXXCDDZvQQClfhqhMHOeItMTpUsT.wlTAkaftbpywYKXCCowLIfDxGeAZmfvztEoMzA.snYuutfUplcUuWJcBDYqiYKGClKANkrXeFg[data-view-name=profile-component-entity]
+    div
+      div.display-flex
+    div.display-flex.flex-column.align-self-center.flex-grow-1
+      div.display-flex.flex-row.justify-space-between
+        a.optional-action-target-wrapper.display-flex.flex-column.full-width
+          div.display-flex.flex-wrap.align-items-center.full-height
+            div.display-flex
+              div.display-flex.full-width
+                div.display-flex.align-items-center.mr1.hoverable-link-text.t-bold
+                  span | MLOps
+                  span.visually-hidden | MLOps
+      div.CyNidYqNlqJRTwJLpYggzvmNLguypEjg.pvs-entity__sub-components
+        ul.AKAamnCGgVGEfOctQIzmwwgiADgHMeRA
+          li.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+            div.mv1.display-flex.align-items-center
+              div.display-flex.link-without-hover-visited
+                div.mr2.mv1
+                  ul.ivm-entity-pile.display-flex.align-items-center.t-black
+                    li.ivm-entity-pile__img-item--stacked
+                      div.ivm-view-attr__img-wrapper
+                        img#ember172.ivm-view-attr__img--centered.ivm-view-attr__img--stacked.ivm-view-attr__img--stacked-square-size-0.EntityPhoto-square-0-stackedFacepile.evi-image.lazy-image.ember-view
+                div.display-flex
+                  div.display-flex.full-width
+                    div.vyiMGDWOBNfWaAYfbaSYUQVseZWIVxPQUPuE.full-width.t-14.t-normal.t-black.display-flex.align-items-center
+                      div.dkAXoJjfbuXMHWrFkgDwqpbccsPwlLeNIA.inline-show-more-text--is-collapsed.inline-show-more-text--is-collapsed-with-line-clamp.full-width
+                        span | Technical Support Engineer, Machine Learning at Tecton
+                        span.visually-hidden | Technical Support Engineer, Machine Learning at Tecton
+          li.EVcRWgnPAIsdgZKCPETWuSKBbiyHGtxo
+            div.pv-action.pv-action__padding
+              button#ember174.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view
+                span.artdeco-button__text | Endorse

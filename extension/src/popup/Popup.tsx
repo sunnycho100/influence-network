@@ -115,6 +115,35 @@ export function Popup() {
     void loadData();
   }, [loadData]);
 
+  // Poll Dexie every 3 s — only trigger a full reload when stats actually change.
+  useEffect(() => {
+    let cancelled = false;
+    let prevCount = stats?.profileCount ?? -1;
+    let prevLastScraped = stats?.lastScrapedAt ?? -1;
+
+    const id = setInterval(async () => {
+      if (cancelled) return;
+      try {
+        const latest = await getExtensionStats();
+        if (
+          latest.profileCount !== prevCount ||
+          (latest.lastScrapedAt ?? -1) !== prevLastScraped
+        ) {
+          prevCount = latest.profileCount;
+          prevLastScraped = latest.lastScrapedAt ?? -1;
+          void loadData();
+        }
+      } catch {
+        /* swallow — next tick will retry */
+      }
+    }, 3_000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, [loadData, stats?.profileCount, stats?.lastScrapedAt]);
+
   const profiles = graph?.profiles ?? [];
   const visibleProfiles = profiles.slice(0, 5);
   const userProfile = graph?.user ?? null;
@@ -162,7 +191,7 @@ export function Popup() {
 
     return visibleProfiles.map((profile, index) => {
       const angle = (Math.PI * 2 * index) / Math.max(total, 1) - Math.PI / 2;
-      const radius = total <= 2 ? 18 : total <= 4 ? 24 : 28;
+      const radius = total <= 2 ? 26 : total <= 4 ? 32 : 36;
       const x = 50 + Math.cos(angle) * radius;
       const y = 50 + Math.sin(angle) * radius;
 
@@ -530,6 +559,7 @@ export function Popup() {
                       }
                       onClick={() => setSelectedProfileId(profile.id)}
                       aria-pressed={isActive}
+                      title={`${profile.name} — ${profile.currentCompany || profile.headline || ''}`}
                     >
                       <span className="orbit-node-name">{profile.name}</span>
                       <span className="orbit-node-meta">
@@ -553,7 +583,13 @@ export function Popup() {
                       style={{ animationDelay: `${index * 60}ms` }}
                       aria-pressed={isActive}
                     >
-                      <span className="profile-card-avatar">{getInitials(profile.name)}</span>
+                      <span className="profile-card-avatar">
+                        {profile.profilePictureUrl ? (
+                          <img src={profile.profilePictureUrl} alt="" loading="lazy" />
+                        ) : (
+                          getInitials(profile.name)
+                        )}
+                      </span>
                       <span className="profile-card-body">
                         <strong>{profile.name}</strong>
                         <span>{getHeadlineFallback(profile)}</span>
@@ -646,15 +682,13 @@ export function Popup() {
             <div>
               <p className="panel-label">Storage status</p>
               <p className="panel-copy">
-                Your dataset is ready for the web app bridge and graph rendering.
+                {profileCount} {profileCount === 1 ? 'profile' : 'profiles'} stored locally.
+                Ready for the web app bridge and graph rendering.
               </p>
             </div>
             <div className="status-actions">
-              <button type="button" className="ghost-button" onClick={() => setLayout('orbit')}>
-                Orbit
-              </button>
-              <button type="button" className="ghost-button" onClick={() => setLayout('cards')}>
-                Cards
+              <button type="button" className="ghost-button" onClick={loadData}>
+                Refresh data
               </button>
             </div>
           </div>
