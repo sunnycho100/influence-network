@@ -255,7 +255,7 @@ function parseEducationLine(
   }
 
   const parts = clean
-    .split(/\s*[|•\-]\s*/)
+    .split(/\s*[|•]\s*|\s+-\s+/)
     .map((part) => part.trim())
     .filter(Boolean);
 
@@ -303,7 +303,7 @@ function parseExperienceLine(
   if (!company && / at /i.test(clean)) {
     const [left, right] = clean.split(/\s+at\s+/i);
     title = left?.trim() ?? title;
-    company = right?.split(/\s*[|•\-]\s*/)[0]?.trim() ?? company;
+    company = right?.split(/\s*[|•]\s*|\s+-\s+/)[0]?.trim() ?? company;
   }
 
   if (!company && parts.length > 0) {

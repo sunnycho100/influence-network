@@ -5,19 +5,25 @@
 
 :root {
   color-scheme: dark;
+  --ink-0: #FAFAF7;
+  --ink-1: #E5E4DF;
+  --ink-2: #9A9A93;
+  --ink-3: #5C5C57;
+  --ink-4: #2A2A28;
+  --surface: #0A0A0A;
+  --accent: #38BDF8;
 }
 
 html {
-  background: #050b14;
-  scroll-behavior: smooth;
+  background: var(--surface);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   font-family: 'Space Grotesk', sans-serif;
-  background: #050b14;
-  color: #e2e8f0;
+  background: var(--surface);
+  color: var(--ink-1);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -31,6 +37,13 @@ input,
 textarea,
 select {
   font: inherit;
+  color: inherit;
+}
+
+input,
+textarea,
+select {
+  background: transparent;
 }
 
 #root {
@@ -38,10 +51,67 @@ select {
 }
 
 ::selection {
-  background: rgba(103, 232, 249, 0.3);
-  color: #f8fafc;
+  background: rgba(56, 189, 248, 0.32);
+  color: var(--ink-0);
 }
 
 a {
   color: inherit;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Optional dot grid background */
+.dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Hairline scrollbar */
+.panel-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: var(--ink-4);
+  border-radius: 0;
+}
+.panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-3);
+}
+
+/* Mono label utility */
+.label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* Slim range input */
+input[type='range'].slim {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 12px;
+}
+input[type='range'].slim::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--ink-4);
+}
+input[type='range'].slim::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 0;
+  background: var(--ink-0);
+  margin-top: -5px;
+  cursor: pointer;
 }

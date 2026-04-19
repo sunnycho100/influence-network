@@ -4,7 +4,7 @@ import { EXTENSION_DEV_SERVER_PORT } from './dev-server-port';
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'AlumniGraph',
+  name: 'Influence Network',
   description: 'Personal LinkedIn graph scraper and visualizer.',
   version: '0.1.0',
   permissions: ['storage', 'scripting', 'activeTab', 'tabs', 'sidePanel'],
@@ -29,7 +29,7 @@ export default defineManifest({
     default_path: 'src/sidepanel/index.html',
   },
   action: {
-    default_title: 'Open AlumniGraph',
+    default_title: 'Open Influence Network',
   },
   externally_connectable: {
     matches: [

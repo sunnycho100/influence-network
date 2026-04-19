@@ -32,6 +32,11 @@ export type ImportDataMessage = {
   profiles: Profile[];
 };
 
+export type ChatQueryMessage = {
+  type: "CHAT_QUERY";
+  question: string;
+};
+
 export type ExtensionMessage =
   | PingMessage
   | GetGraphMessage
@@ -39,7 +44,8 @@ export type ExtensionMessage =
   | GenerateMessageRequest
   | MarkSentMessage
   | ExportDataMessage
-  | ImportDataMessage;
+  | ImportDataMessage
+  | ChatQueryMessage;
 
 export type OkResponse<T> = {
   ok: true;
@@ -61,6 +67,18 @@ export type MarkSentResponse = ExtensionResponse<null>;
 export type ExportDataResponse = ExtensionResponse<{ profiles: Profile[] }>;
 export type ImportDataResponse = ExtensionResponse<{ imported: number }>;
 
+export interface ChatCitation {
+  profileId: string;
+  name: string;
+  reason: string;
+}
+
+export type ChatQueryResponse = ExtensionResponse<{
+  answer: string;
+  citations: ChatCitation[];
+  usedLlm: boolean;
+}>;
+
 export type AllowedOrigin =
   | 'http://localhost:5173'
   | 'http://127.0.0.1:5173'
@@ -79,7 +97,8 @@ export function isExtensionMessage(message: unknown): message is ExtensionMessag
     type === "GENERATE_MESSAGE" ||
     type === "MARK_SENT" ||
     type === "EXPORT_DATA" ||
-    type === "IMPORT_DATA"
+    type === "IMPORT_DATA" ||
+    type === "CHAT_QUERY"
   );
 }
 

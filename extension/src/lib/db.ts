@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 
 import {
+  canonicalSchool,
   computeWarmness,
   type GeneratedMessage,
   type GraphSnapshot,
@@ -41,7 +42,7 @@ interface RecordScrapeErrorInput {
   profileId?: string;
 }
 
-class AlumniGraphDatabase extends Dexie {
+class InfluenceNetworkDatabase extends Dexie {
   profiles!: EntityTable<Profile, 'id'>;
   userProfile!: EntityTable<UserProfile, 'id'>;
   messages!: EntityTable<GeneratedMessage, 'id'>;
@@ -59,7 +60,7 @@ class AlumniGraphDatabase extends Dexie {
   }
 }
 
-export const db = new AlumniGraphDatabase();
+export const db = new InfluenceNetworkDatabase();
 
 export function applyWarmness(profile: Profile, user: UserProfile | null): Profile {
   if (!user) {
@@ -128,7 +129,9 @@ export async function recordProfileScrape({
 }: RecordProfileScrapeInput): Promise<void> {
   await db.transaction('rw', db.profiles, db.sessions, db.userProfile, async () => {
     const user = (await db.userProfile.get('me')) ?? null;
-    const scoredProfile = applyWarmness(profile, user);
+    const existing = await db.profiles.get(profile.id);
+    const merged = mergeProfile(existing, profile);
+    const scoredProfile = applyWarmness(merged, user);
 
     await db.profiles.put(scoredProfile);
     await db.sessions.put({
@@ -141,6 +144,72 @@ export async function recordProfileScrape({
       completedAt,
     });
   });
+}
+
+/**
+ * Merge a freshly scraped profile with what's already stored. The incoming
+ * scrape is authoritative for top-level fields (name, headline, current
+ * role, etc.), but we union education and experience by canonical key so we
+ * don't lose data captured by an earlier source — for example, the school
+ * name from an alumni-page scrape when the profile-page scrape rendered
+ * with a collapsed education section.
+ */
+function mergeProfile(existing: Profile | undefined, incoming: Profile): Profile {
+  if (!existing) return incoming;
+
+  const merged: Profile = { ...existing, ...incoming };
+
+  // Union education entries by canonical school key. Incoming entries win
+  // when keys collide (they tend to have richer degree/major/dates info).
+  const eduByKey = new Map<string, Profile['education'][number]>();
+  const eduExtras: Profile['education'] = [];
+  const seenKeys = new Set<string>();
+  for (const edu of incoming.education) {
+    const key = canonicalSchool(edu.school);
+    if (key) {
+      eduByKey.set(key, edu);
+      seenKeys.add(key);
+    } else {
+      eduExtras.push(edu);
+    }
+  }
+  for (const edu of existing.education) {
+    const key = canonicalSchool(edu.school);
+    if (!key || seenKeys.has(key)) continue;
+    eduByKey.set(key, edu);
+    seenKeys.add(key);
+  }
+  merged.education = [...eduByKey.values(), ...eduExtras];
+
+  // Preserve experience entries from earlier scrapes that the new scrape
+  // didn't include (e.g. search-results scrapes have no experience).
+  if (incoming.experience.length === 0 && existing.experience.length > 0) {
+    merged.experience = existing.experience;
+  }
+
+  // Don't let an empty/missing field on the new scrape erase data we already
+  // had from a richer source.
+  if (!incoming.location && existing.location) merged.location = existing.location;
+  if (!incoming.currentCompany && existing.currentCompany) {
+    merged.currentCompany = existing.currentCompany;
+  }
+  if (!incoming.currentTitle && existing.currentTitle) {
+    merged.currentTitle = existing.currentTitle;
+  }
+  if (!incoming.profilePictureUrl && existing.profilePictureUrl) {
+    merged.profilePictureUrl = existing.profilePictureUrl;
+  }
+  if ((!incoming.skills || incoming.skills.length === 0) && existing.skills?.length) {
+    merged.skills = existing.skills;
+  }
+  if (incoming.mutualConnections === 0 && existing.mutualConnections > 0) {
+    merged.mutualConnections = existing.mutualConnections;
+  }
+  if (incoming.connectionDegree == null && existing.connectionDegree != null) {
+    merged.connectionDegree = existing.connectionDegree;
+  }
+
+  return merged;
 }
 
 export async function saveUserProfile(profile: UserProfile): Promise<UserProfile> {

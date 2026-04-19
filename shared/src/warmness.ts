@@ -1,4 +1,5 @@
 import type { Profile, UserProfile } from './models.js';
+import { canonicalSchool } from './canonical.js';
 
 export interface WarmnessResult {
   score: number;
@@ -9,8 +10,12 @@ export function computeWarmness(user: UserProfile, target: Profile): WarmnessRes
   let score = 0;
   const signals: string[] = [];
 
-  const userSchools = user.parsed.education.map((entry) => normalize(entry.school));
-  const targetSchools = target.education.map((entry) => normalize(entry.school));
+  const userSchools = user.parsed.education
+    .map((entry) => canonicalSchool(entry.school))
+    .filter(Boolean);
+  const targetSchools = target.education
+    .map((entry) => canonicalSchool(entry.school))
+    .filter(Boolean);
   const sharedSchool = userSchools.find((school) => targetSchools.includes(school));
   if (sharedSchool) {
     score += 30;

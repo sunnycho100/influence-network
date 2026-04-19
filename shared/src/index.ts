@@ -7,6 +7,9 @@ export type {
 
 export type {
   AllowedOrigin,
+  ChatCitation,
+  ChatQueryMessage,
+  ChatQueryResponse,
   ErrorResponse,
   ExportDataMessage,
   ExportDataResponse,
@@ -28,6 +31,8 @@ export type {
 } from "./messages.js";
 
 export type { WarmnessResult } from "./warmness.js";
+
+export { canonicalSchool } from "./canonical.js";
 export type { MindMapData, MindMapEdge, MindMapNode } from "./graph.js";
 
 export { isAllowedOrigin, isExtensionMessage } from "./messages.js";

@@ -2,7 +2,7 @@ import { handleInternalMessage } from '../lib/internal-messaging';
 import { handleExternalMessage } from '../lib/messaging';
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.info('AlumniGraph service worker installed');
+  console.info('Influence Network service worker installed');
 });
 
 void chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });

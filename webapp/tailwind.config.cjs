@@ -7,17 +7,34 @@ module.exports = {
         display: ['"Space Grotesk"', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'monospace'],
       },
-      boxShadow: {
-        glow: '0 0 0 1px rgba(255,255,255,0.12), 0 24px 80px rgba(14, 23, 52, 0.34)',
+      colors: {
+        ink: {
+          0: '#FAFAF7',
+          1: '#E5E4DF',
+          2: '#9A9A93',
+          3: '#5C5C57',
+          4: '#2A2A28',
+        },
+        accent: {
+          DEFAULT: '#38BDF8',
+          soft: 'rgba(56,189,248,0.12)',
+        },
+        surface: '#0A0A0A',
+      },
+      borderColor: {
+        hairline: '#2A2A28',
+      },
+      borderRadius: {
+        chip: '2px',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+        shimmer: {
+          '0%, 100%': { boxShadow: '0 0 8px rgba(56,189,248,0.25)' },
+          '50%': { boxShadow: '0 0 16px rgba(56,189,248,0.55)' },
         },
       },
       animation: {
-        float: 'float 6s ease-in-out infinite',
+        shimmer: 'shimmer 2.4s ease-in-out infinite',
       },
     },
   },

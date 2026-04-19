@@ -1,6 +1,7 @@
 import {
   isAllowedOrigin,
   isExtensionMessage,
+  type ChatQueryResponse,
   type GraphResponse,
   type ProfileResponse,
   type ExtensionResponse,
@@ -13,6 +14,7 @@ import {
 
 import { db, getGraphSnapshot, getProfileById, applyWarmness } from './db';
 import { generateMessage } from './llm';
+import { chatQuery } from './chat';
 
 const APP_VERSION = '0.1.0';
 
@@ -24,6 +26,7 @@ type AnyResponse =
   | MarkSentResponse
   | ExportDataResponse
   | ImportDataResponse
+  | ChatQueryResponse
   | ExtensionResponse<never>;
 
 export function handleExternalMessage(
@@ -97,6 +100,10 @@ async function respondToExternalMessage(
         imported++;
       }
       return { ok: true, data: { imported } };
+    }
+    case 'CHAT_QUERY': {
+      const result = await chatQuery(message.question);
+      return { ok: true, data: result };
     }
     default:
       return { ok: false, error: 'unsupported_message_type' };

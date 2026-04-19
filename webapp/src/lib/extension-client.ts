@@ -1,4 +1,10 @@
-import type { ExtensionMessage, ExtensionResponse, GraphSnapshot, Profile } from '@alumni-graph/shared';
+import type {
+  ChatCitation,
+  ExtensionMessage,
+  ExtensionResponse,
+  GraphSnapshot,
+  Profile,
+} from '@alumni-graph/shared';
 
 const extensionId = import.meta.env.VITE_EXTENSION_ID?.trim() ?? '';
 
@@ -59,4 +65,9 @@ export const extensionClient = {
     send<{ profiles: Profile[] }>({ type: 'EXPORT_DATA' }),
   importData: (profiles: Profile[]) =>
     send<{ imported: number }>({ type: 'IMPORT_DATA', profiles }),
+  chatQuery: (question: string) =>
+    send<{ answer: string; citations: ChatCitation[]; usedLlm: boolean }>({
+      type: 'CHAT_QUERY',
+      question,
+    }),
 };

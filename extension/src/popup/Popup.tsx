@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, CSSProperties } from 'react';
 
 import { getGraphSnapshot, saveUserProfile } from '../lib/db';
+import { hasLlmConfigured, parseResumeWithLlm } from '../lib/llm';
 import { extractTextFromPdf, parseResumeTextToUserProfile } from '../lib/resume-parser';
 import type { GraphSnapshot, Profile, UserProfile } from '@alumni-graph/shared';
 
@@ -278,14 +279,28 @@ export function Popup() {
       const parseOptions = userProfile?.name
         ? { fallbackName: userProfile.name }
         : undefined;
-      const nextUserProfile = parseResumeTextToUserProfile(trimmedResume, {
-        ...(parseOptions ?? {}),
-      });
+
+      let nextUserProfile: UserProfile;
+      let parserUsed: 'gemini' | 'fallback' = 'fallback';
+
+      if (await hasLlmConfigured()) {
+        try {
+          setResumeFeedback('Parsing resume with Gemini...');
+          nextUserProfile = await parseResumeWithLlm(trimmedResume, parseOptions ?? {});
+          parserUsed = 'gemini';
+        } catch (llmError) {
+          console.warn('Gemini resume parsing failed, falling back to regex parser', llmError);
+          nextUserProfile = parseResumeTextToUserProfile(trimmedResume, parseOptions ?? {});
+        }
+      } else {
+        nextUserProfile = parseResumeTextToUserProfile(trimmedResume, parseOptions ?? {});
+      }
+
       await saveUserProfile(nextUserProfile);
 
       setResumeState('saved');
       setResumeFeedback(
-        `Saved ${nextUserProfile.name}. ` +
+        `Saved ${nextUserProfile.name} (parsed by ${parserUsed === 'gemini' ? 'Gemini' : 'local parser'}). ` +
           `${nextUserProfile.parsed.education.length} education entries, ` +
           `${nextUserProfile.parsed.experience.length} experience entries, ` +
           `${nextUserProfile.parsed.skills.length} skills.`,
@@ -317,17 +332,13 @@ export function Popup() {
 
   return (
     <main className="popup-shell">
-      <div className="ambient ambient-a" />
-      <div className="ambient ambient-b" />
-      <div className="ambient ambient-c" />
-
       <section className="hero-card">
         <div className="hero-copy">
-          <p className="eyebrow">AlumniGraph</p>
-          <h1>Graph cockpit</h1>
+          <p className="eyebrow">Influence Network</p>
+          <h1>Local network</h1>
           <p className="lede">
-            A compact local map of your alumni network, with live node details and the
-            latest scrape stats kept in view.
+            A compact local map of your alumni network. Node details and the latest scrape
+            stats stay in view.
           </p>
 
           <div className="stat-strip" aria-label="Extension stats">

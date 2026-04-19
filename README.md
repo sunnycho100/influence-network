@@ -1,6 +1,6 @@
-# AlumniGraph
+# Influence Network
 
-AlumniGraph is a personal-use Chrome extension plus localhost React app for building a local graph of LinkedIn connections.
+Influence Network is a personal-use Chrome extension plus localhost React app for building a local graph of LinkedIn connections.
 
 The extension is the system of record. It scrapes profile data while the user browses LinkedIn, stores that data in IndexedDB through Dexie, and exposes a small external message API to the web app. The web app reads from the extension and renders a larger mind-map style network view. There is no backend, no auth, and no cloud persistence in the current implementation.
 
@@ -464,7 +464,7 @@ The extension uses host permissions for `5175` so the MV3 service worker can loa
 3. Load `extension/dist` as an unpacked extension in `chrome://extensions`.
 4. Copy `webapp/.env.example` to `webapp/.env`.
 5. Set `VITE_EXTENSION_ID` in `webapp/.env` to the unpacked extension ID from Chrome.
-6. Click the AlumniGraph toolbar icon to open the extension side panel.
+6. Click the Influence Network toolbar icon to open the extension side panel.
 7. Start the web app with `pnpm dev:webapp`.
 8. Open `http://localhost:5173` to inspect the localhost graph view.
 
