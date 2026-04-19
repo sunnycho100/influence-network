@@ -61,7 +61,7 @@ class AlumniGraphDatabase extends Dexie {
 
 export const db = new AlumniGraphDatabase();
 
-function applyWarmness(profile: Profile, user: UserProfile | null): Profile {
+export function applyWarmness(profile: Profile, user: UserProfile | null): Profile {
   if (!user) {
     const nextProfile: Profile = { ...profile };
     delete nextProfile.warmnessScore;
@@ -84,8 +84,12 @@ export async function getGraphSnapshot(): Promise<GraphSnapshot> {
     db.messages.toArray(),
   ]);
 
+  const scoredProfiles = profiles
+    .map((profile) => applyWarmness(profile, user ?? null))
+    .sort((left, right) => right.lastScraped - left.lastScraped);
+
   return {
-    profiles: profiles.sort((left, right) => right.lastScraped - left.lastScraped),
+    profiles: scoredProfiles,
     user: user ?? null,
     messages,
   };

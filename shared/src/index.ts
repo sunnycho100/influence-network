@@ -8,6 +8,8 @@ export type {
 export type {
   AllowedOrigin,
   ErrorResponse,
+  ExportDataMessage,
+  ExportDataResponse,
   ExtensionMessage,
   ExtensionResponse,
   GenerateMessageRequest,
@@ -15,6 +17,8 @@ export type {
   GetGraphMessage,
   GetProfileMessage,
   GraphResponse,
+  ImportDataMessage,
+  ImportDataResponse,
   MarkSentMessage,
   MarkSentResponse,
   OkResponse,

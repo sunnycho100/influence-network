@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { GraphSnapshot, Profile } from '@alumni-graph/shared';
 import { extensionClient } from './lib/extension-client';
 import {
@@ -11,6 +11,7 @@ import {
 } from './lib/graph-layout';
 
 type LoadState = 'idle' | 'loading' | 'success' | 'error';
+type MessageGenState = 'idle' | 'generating' | 'done' | 'error';
 
 interface PingResult {
   version: string;
@@ -157,7 +158,34 @@ export default function App() {
   const [error, setError] = useState('');
   const [lastLoadedAt, setLastLoadedAt] = useState<number | null>(null);
 
-  const layout = useMemo(() => buildGraphLayout(snapshot ?? EMPTY_SNAPSHOT), [snapshot]);
+  // Filters
+  const [searchQuery, setSearchQuery] = useState('');
+  const [companyFilter, setCompanyFilter] = useState('');
+  const [minWarmness, setMinWarmness] = useState(0);
+
+  // Message generation
+  const [msgState, setMsgState] = useState<MessageGenState>('idle');
+  const [generatedDraft, setGeneratedDraft] = useState('');
+  const [msgError, setMsgError] = useState('');
+  const [copiedMsg, setCopiedMsg] = useState(false);
+
+  // Auto-polling ref
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const filteredSnapshot = useMemo<GraphSnapshot>(() => {
+    if (!snapshot) return EMPTY_SNAPSHOT;
+    const q = searchQuery.toLowerCase();
+    const cf = companyFilter.toLowerCase();
+    const filtered = snapshot.profiles.filter((p) => {
+      if (q && !p.name.toLowerCase().includes(q) && !p.headline.toLowerCase().includes(q)) return false;
+      if (cf && companyFromProfile(p).toLowerCase() !== cf) return false;
+      if ((p.warmnessScore ?? 0) < minWarmness) return false;
+      return true;
+    });
+    return { ...snapshot, profiles: filtered };
+  }, [snapshot, searchQuery, companyFilter, minWarmness]);
+
+  const layout = useMemo(() => buildGraphLayout(filteredSnapshot), [filteredSnapshot]);
 
   const selectedNode = useMemo(
     () => getSelectedNode(snapshot, selectedId),
@@ -181,7 +209,12 @@ export default function App() {
     };
   }, [snapshot]);
 
-  async function loadGraph() {
+  const allCompanies = useMemo(() => {
+    const companies = new Set((snapshot?.profiles ?? []).map(companyFromProfile));
+    return [...companies].sort();
+  }, [snapshot]);
+
+  const loadGraph = useCallback(async () => {
     setBridgeState('loading');
     setGraphState('loading');
     setError('');
@@ -220,11 +253,21 @@ export default function App() {
           : 'Unable to reach the extension bridge'
       );
     }
-  }
+  }, []);
 
   useEffect(() => {
     void loadGraph();
-  }, []);
+  }, [loadGraph]);
+
+  // Auto-poll every 5 seconds
+  useEffect(() => {
+    pollRef.current = setInterval(() => {
+      void loadGraph();
+    }, 5_000);
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, [loadGraph]);
 
   useEffect(() => {
     if (!snapshot) return;
@@ -238,6 +281,28 @@ export default function App() {
   const connectionStatus =
     bridgeState === 'success' ? 'Linked' : bridgeState === 'error' ? 'Offline' : 'Checking';
   const graphStatus = graphState === 'success' ? 'Graph loaded' : graphState === 'error' ? 'No data' : 'Syncing';
+
+  const handleGenerateMessage = useCallback(async (profileId: string) => {
+    setMsgState('generating');
+    setGeneratedDraft('');
+    setMsgError('');
+    setCopiedMsg(false);
+    try {
+      const result = await extensionClient.generateMessage(profileId);
+      setGeneratedDraft(result.draft);
+      setMsgState('done');
+    } catch (err) {
+      setMsgError(err instanceof Error ? err.message : 'Message generation failed');
+      setMsgState('error');
+    }
+  }, []);
+
+  const handleCopyDraft = useCallback(() => {
+    void navigator.clipboard.writeText(generatedDraft).then(() => {
+      setCopiedMsg(true);
+      setTimeout(() => setCopiedMsg(false), 2000);
+    });
+  }, [generatedDraft]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05101d] text-slate-50">
@@ -271,6 +336,50 @@ export default function App() {
               >
                 Refresh graph
               </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const { profiles } = await extensionClient.exportData();
+                    const blob = new Blob([JSON.stringify(profiles, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `alumni-graph-export-${new Date().toISOString().slice(0, 10)}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : 'Export failed');
+                  }
+                }}
+                className="inline-flex items-center justify-center rounded-2xl border border-white/12 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/12"
+              >
+                Export JSON
+              </button>
+              <label className="inline-flex cursor-pointer items-center justify-center rounded-2xl border border-white/12 bg-white/6 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/12">
+                Import JSON
+                <input
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const text = await file.text();
+                      const profiles = JSON.parse(text);
+                      if (!Array.isArray(profiles)) throw new Error('Expected an array of profiles');
+                      const { imported } = await extensionClient.importData(profiles);
+                      setError('');
+                      void loadGraph();
+                      alert(`Imported ${imported} profiles`);
+                    } catch (err) {
+                      setError(err instanceof Error ? err.message : 'Import failed');
+                    }
+                    e.target.value = '';
+                  }}
+                />
+              </label>
               <div className="rounded-2xl border border-white/12 bg-slate-950/55 px-4 py-3">
                 <div className="text-[11px] uppercase tracking-[0.22em] text-slate-400">
                   Extension ID
@@ -300,6 +409,55 @@ export default function App() {
                   <div className="mt-2 text-lg font-semibold text-white">{String(value)}</div>
                 </div>
               ))}
+            </div>
+
+            {/* Filter Bar */}
+            <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-white/12 bg-white/6 p-3 backdrop-blur-xl">
+              <div className="min-w-0 flex-1">
+                <label className="mb-1 block text-[11px] uppercase tracking-[0.22em] text-slate-400">Search</label>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Name or headline..."
+                  className="w-full rounded-xl border border-white/12 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/60"
+                />
+              </div>
+              <div className="min-w-[140px]">
+                <label className="mb-1 block text-[11px] uppercase tracking-[0.22em] text-slate-400">Company</label>
+                <select
+                  value={companyFilter}
+                  onChange={(e) => setCompanyFilter(e.target.value)}
+                  className="w-full rounded-xl border border-white/12 bg-slate-950/60 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-400/60"
+                >
+                  <option value="">All companies</option>
+                  {allCompanies.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="min-w-[140px]">
+                <label className="mb-1 block text-[11px] uppercase tracking-[0.22em] text-slate-400">
+                  Min warmness: {minWarmness}
+                </label>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={minWarmness}
+                  onChange={(e) => setMinWarmness(Number(e.target.value))}
+                  className="w-full accent-cyan-400"
+                />
+              </div>
+              {(searchQuery || companyFilter || minWarmness > 0) && (
+                <button
+                  type="button"
+                  onClick={() => { setSearchQuery(''); setCompanyFilter(''); setMinWarmness(0); }}
+                  className="rounded-xl border border-white/12 bg-white/6 px-3 py-2 text-xs text-slate-300 transition hover:bg-white/12"
+                >
+                  Clear filters
+                </button>
+              )}
             </div>
 
             <div className="rounded-[2rem] border border-white/12 bg-slate-950/74 p-3 shadow-[0_30px_100px_rgba(2,6,23,0.42)] backdrop-blur-xl sm:p-4">
@@ -508,6 +666,14 @@ export default function App() {
                       >
                         Open LinkedIn profile
                       </a>
+                      <button
+                        type="button"
+                        onClick={() => handleGenerateMessage(selectedNode.profile!.id)}
+                        disabled={msgState === 'generating'}
+                        className="inline-flex items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/12 px-4 py-3 text-sm font-semibold text-amber-100 transition hover:-translate-y-0.5 disabled:opacity-50"
+                      >
+                        {msgState === 'generating' ? 'Generating…' : '+ Generate Message'}
+                      </button>
                     </div>
                   ) : (
                     <div className="mt-4 space-y-4">
@@ -593,6 +759,51 @@ export default function App() {
                         ? `This connection is carrying ${selectedNode.profile.mutualConnections} mutual signal${selectedNode.profile.mutualConnections === 1 ? '' : 's'}.`
                         : 'This connection is lightly mapped, so it is a good candidate for a first outreach pass.'}
                     </p>
+                  </div>
+                ) : null}
+
+                {/* Message Composer */}
+                {msgState !== 'idle' && selectedNode.kind === 'profile' ? (
+                  <div className="rounded-[1.6rem] border border-amber-300/20 bg-amber-500/8 p-4 space-y-3">
+                    <div className="text-[11px] uppercase tracking-[0.22em] text-amber-200">AI Draft</div>
+                    {msgState === 'generating' && (
+                      <p className="text-sm text-amber-100/70 animate-pulse">Generating personalized message…</p>
+                    )}
+                    {msgState === 'error' && (
+                      <p className="text-sm text-rose-200">{msgError}</p>
+                    )}
+                    {msgState === 'done' && (
+                      <>
+                        <textarea
+                          value={generatedDraft}
+                          onChange={(e) => setGeneratedDraft(e.target.value)}
+                          rows={4}
+                          className="w-full resize-y rounded-xl border border-white/12 bg-slate-950/60 p-3 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-400/60"
+                        />
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                          <span>{generatedDraft.length} / 280 chars</span>
+                          {generatedDraft.length > 280 && (
+                            <span className="text-rose-300">Over limit</span>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={handleCopyDraft}
+                            className="rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5"
+                          >
+                            {copiedMsg ? 'Copied!' : 'Copy to clipboard'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setMsgState('idle'); setGeneratedDraft(''); }}
+                            className="rounded-xl border border-white/12 bg-white/6 px-4 py-2 text-sm text-slate-300 transition hover:bg-white/12"
+                          >
+                            Dismiss
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ) : null}
               </div>

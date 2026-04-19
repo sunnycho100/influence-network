@@ -1,4 +1,4 @@
-import type { ExtensionMessage, ExtensionResponse, GraphSnapshot } from '@alumni-graph/shared';
+import type { ExtensionMessage, ExtensionResponse, GraphSnapshot, Profile } from '@alumni-graph/shared';
 
 const extensionId = import.meta.env.VITE_EXTENSION_ID?.trim() ?? '';
 
@@ -51,4 +51,12 @@ function send<T>(message: ExtensionMessage): Promise<T> {
 export const extensionClient = {
   ping: () => send<{ version: string }>({ type: 'PING' }),
   getGraph: () => send<GraphSnapshot>({ type: 'GET_GRAPH' }),
+  generateMessage: (profileId: string) =>
+    send<{ draft: string }>({ type: 'GENERATE_MESSAGE', profileId }),
+  markSent: (messageId: string) =>
+    send<null>({ type: 'MARK_SENT', messageId }),
+  exportData: () =>
+    send<{ profiles: Profile[] }>({ type: 'EXPORT_DATA' }),
+  importData: (profiles: Profile[]) =>
+    send<{ imported: number }>({ type: 'IMPORT_DATA', profiles }),
 };

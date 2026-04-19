@@ -12,10 +12,13 @@
     "clean": "pnpm --filter @alumni-graph/shared clean && rm -rf extension/dist webapp/dist",
     "dev:extension": "pnpm --filter @alumni-graph/extension dev",
     "dev:webapp": "pnpm --filter @alumni-graph/webapp dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "pnpm --filter @alumni-graph/shared typecheck && pnpm --filter @alumni-graph/extension typecheck && pnpm --filter @alumni-graph/webapp typecheck"
   },
   "devDependencies": {
     "@types/node": "25.6.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "^4.1.4"
   }
 }

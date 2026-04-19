@@ -23,12 +23,23 @@ export type MarkSentMessage = {
   messageId: string;
 };
 
+export type ExportDataMessage = {
+  type: "EXPORT_DATA";
+};
+
+export type ImportDataMessage = {
+  type: "IMPORT_DATA";
+  profiles: Profile[];
+};
+
 export type ExtensionMessage =
   | PingMessage
   | GetGraphMessage
   | GetProfileMessage
   | GenerateMessageRequest
-  | MarkSentMessage;
+  | MarkSentMessage
+  | ExportDataMessage
+  | ImportDataMessage;
 
 export type OkResponse<T> = {
   ok: true;
@@ -47,6 +58,8 @@ export type GraphResponse = ExtensionResponse<GraphSnapshot>;
 export type ProfileResponse = ExtensionResponse<Profile | undefined>;
 export type GenerateMessageResponse = ExtensionResponse<{ draft: string }>;
 export type MarkSentResponse = ExtensionResponse<null>;
+export type ExportDataResponse = ExtensionResponse<{ profiles: Profile[] }>;
+export type ImportDataResponse = ExtensionResponse<{ imported: number }>;
 
 export type AllowedOrigin =
   | 'http://localhost:5173'
@@ -64,7 +77,9 @@ export function isExtensionMessage(message: unknown): message is ExtensionMessag
     type === "GET_GRAPH" ||
     type === "GET_PROFILE" ||
     type === "GENERATE_MESSAGE" ||
-    type === "MARK_SENT"
+    type === "MARK_SENT" ||
+    type === "EXPORT_DATA" ||
+    type === "IMPORT_DATA"
   );
 }
 

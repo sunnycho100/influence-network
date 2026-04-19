@@ -68,6 +68,18 @@ export function Popup() {
   const [uploadedFileLabel, setUploadedFileLabel] = useState('');
   const resumeFileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Settings
+  const [showSettings, setShowSettings] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+  const [apiKeySaved, setApiKeySaved] = useState(false);
+
+  // Load saved API key on mount
+  useEffect(() => {
+    chrome.storage.local.get('geminiApiKey').then((result) => {
+      if (result.geminiApiKey) setApiKey(result.geminiApiKey as string);
+    });
+  }, []);
+
   const loadData = useCallback(async () => {
     setState('loading');
     setError('');
@@ -701,6 +713,55 @@ export function Popup() {
           <p className="panel-copy">{error}</p>
         </section>
       )}
+
+      {/* Settings toggle */}
+      <section style={{ marginTop: 12, padding: '0 16px 16px' }}>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => setShowSettings(!showSettings)}
+          style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#94a3b8' }}
+        >
+          {showSettings ? '▾ Settings' : '▸ Settings'}
+        </button>
+
+        {showSettings && (
+          <div style={{ marginTop: 8, padding: 12, borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <label style={{ display: 'block', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.18em', color: '#94a3b8', marginBottom: 6 }}>
+              Gemini API Key
+            </label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => { setApiKey(e.target.value); setApiKeySaved(false); }}
+              placeholder="AIza..."
+              style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(2,6,23,0.7)', color: '#e2e8f0', fontSize: 13, outline: 'none' }}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => {
+                  chrome.storage.local.set({ geminiApiKey: apiKey }).then(() => {
+                    setApiKeySaved(true);
+                    setTimeout(() => setApiKeySaved(false), 2000);
+                  });
+                }}
+                style={{ fontSize: 12, color: '#67e8f9' }}
+              >
+                Save key
+              </button>
+              {apiKeySaved && <span style={{ fontSize: 11, color: '#6ee7b7' }}>Saved!</span>}
+            </div>
+            <p style={{ marginTop: 6, fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
+              Required for AI message generation. Get one at{' '}
+              <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" style={{ color: '#67e8f9', textDecoration: 'underline' }}>
+                aistudio.google.com/apikey
+              </a>
+            </p>
+          </div>
+        )}
+      </section>
     </main>
   );
 }

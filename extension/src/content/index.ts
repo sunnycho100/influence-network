@@ -1,8 +1,13 @@
 import { scrapeProfilePage } from './scrapers/profile-page';
+import { scrapeSearchResults } from './scrapers/search-results';
+import { scrapeAlumniPage } from './scrapers/alumni-page';
+import { canScrape, recordScrape, timeUntilNextScrape } from '../lib/throttle';
 
 import type { InternalExtensionMessage, InternalExtensionResponse } from '../lib/runtime-messages';
 
 const PROFILE_URL_PATTERN = /linkedin\.com\/in\/[^/?#]+\/?(?:[?#].*)?$/i;
+const SEARCH_URL_PATTERN = /linkedin\.com\/search\/results\/people/i;
+const ALUMNI_URL_PATTERN = /linkedin\.com\/school\/[^/]+\/people/i;
 const SCRAPE_DELAYS_MS = [250, 1200, 3200];
 
 let lastObservedUrl = location.href;
@@ -58,10 +63,18 @@ function scheduleRetry(): void {
 }
 
 async function handleRoute(url: string, routeToken: number): Promise<void> {
-  if (routeToken !== activeRouteToken || !isProfileUrl(url)) {
-    return;
-  }
+  if (routeToken !== activeRouteToken) return;
 
+  if (isProfileUrl(url)) {
+    await handleProfileRoute(url);
+  } else if (isSearchUrl(url)) {
+    await handleBulkScrape(url, 'search', () => scrapeSearchResults(document));
+  } else if (isAlumniUrl(url)) {
+    await handleBulkScrape(url, 'alumni', () => scrapeAlumniPage(document));
+  }
+}
+
+async function handleProfileRoute(url: string): Promise<void> {
   const startedAt = Date.now();
 
   try {
@@ -98,9 +111,56 @@ function isProfileUrl(url: string): boolean {
   return PROFILE_URL_PATTERN.test(url);
 }
 
+function isSearchUrl(url: string): boolean {
+  return SEARCH_URL_PATTERN.test(url);
+}
+
+function isAlumniUrl(url: string): boolean {
+  return ALUMNI_URL_PATTERN.test(url);
+}
+
 function extractProfileId(url: string): string | null {
   const match = url.match(/linkedin\.com\/in\/([^/?#]+)/i);
   return match?.[1] ?? null;
+}
+
+async function handleBulkScrape(
+  url: string,
+  route: 'search' | 'alumni',
+  scraper: () => import('@alumni-graph/shared').Profile[],
+): Promise<void> {
+  const startedAt = Date.now();
+  try {
+    const profiles = scraper();
+    for (const profile of profiles) {
+      // Throttle: wait if needed
+      while (!canScrape()) {
+        const delay = timeUntilNextScrape();
+        if (delay > 0) await wait(delay);
+      }
+      await sendInternalMessage({
+        type: 'UPSERT_SCRAPED_PROFILE',
+        profile,
+        url,
+        startedAt,
+        completedAt: Date.now(),
+      });
+      recordScrape();
+    }
+  } catch (error) {
+    await sendInternalMessage({
+      type: 'SCRAPE_ERROR',
+      route,
+      url,
+      error: error instanceof Error ? error.message : 'Unknown scrape failure',
+      startedAt,
+      completedAt: Date.now(),
+    });
+  }
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function sendInternalMessage(
